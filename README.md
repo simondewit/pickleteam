@@ -10,3 +10,11 @@ To use *plot.py*, [Scattertext](https://github.com/JasonKessler/scattertext) mus
 On linux, run:
 
 `$ pip install scattertext && python -m spacy.en.download`
+
+
+### Results:
+#### English
+SVM: 0.31
+
+#### Spanish
+SVM: 0.23
