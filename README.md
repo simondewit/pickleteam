@@ -14,7 +14,7 @@ On linux, run:
 
 ### Results:
 #### English
-SVM: 0.31
+SVM (11-10-2017): 0.31
 
 #### Spanish
-SVM: 0.23
+SVM (11-10-2017): 0.23
