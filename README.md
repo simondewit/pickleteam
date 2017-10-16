@@ -19,5 +19,8 @@ SVM (11-10-2017): 0.31
 #### Spanish
 SVM (11-10-2017): 0.23
 
-#### Using TweetTokenizer
+#### With character unigrams
+SVM (16-10-2017): 0.24
+
+#### Using TweetTokenizer (unigrams)
 SVM (16-10-2017): 0.41
