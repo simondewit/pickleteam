@@ -57,8 +57,7 @@ class CustomPreprocessor(BaseEstimator, TransformerMixin):
         return [" ".join(doc) for doc in X]
 
     def transform(self, X):
-        test = [list(self.tokenize(doc)) for doc in X]
-        return test
+        return [list(self.tokenize(doc)) for doc in X]
 
     def tokenize(self, document):
         tokenizer = TweetTokenizer()
