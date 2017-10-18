@@ -24,3 +24,6 @@ SVM (16-10-2017): 0.24
 
 #### Using TweetTokenizer (unigrams)
 SVM (16-10-2017): 0.41
+
+### MLP with TweetTokenizer and tf-idf word unigrams features
+With parameters `min_df=10`, `hidden_layer_sizes=(50,)`, `max_iter=4`, `solver='adam'`: 0.43
