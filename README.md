@@ -27,3 +27,8 @@ SVM (16-10-2017): 0.41
 
 #### MLP with TweetTokenizer and tf-idf word unigrams features
 With parameters `min_df=10`, `hidden_layer_sizes=(50,)`, `max_iter=4`, `solver='adam'`: 0.43
+
+#### Neural Network with word embeddings glove.twitter.27B (100D)
+Neural Network (22-10-2017): 0.378
+
+
