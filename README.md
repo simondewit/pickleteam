@@ -29,15 +29,15 @@ SVM (16-10-2017): 0.41
 With parameters `min_df=10`, `hidden_layer_sizes=(50,)`, `max_iter=4`, `solver='adam'`: 0.43
 
 #### SVM (18-10-2017)
-Word n-grams (1,2) without Tweet Tokenizer: 0.3403
-Word n-grams (1,2) using Tweet Tokenizer: 0.4267
-Char n-grams (3,5) using Tweet Tokenizer: 0.4181
-Word n-grams (1,2) using Tweet Tokenizer & min_df = 10: 0.4148
-Word n-grams (1,2) using Tweet Tokenizer & min_df = 5: 0.4197
-Word n-grams (1,2) using Tweet Tokenizer & min_df = 2: 0.4255
-Word n-grams (1,3) using Tweet Tokenizer & min_df = default: 0.4267
-Word n-grams (1,2) using Tweet Tokenizer & min_df = default: 0.4210
-Word n-grams (1,3) using Tweet Tokenizer & min_df = default & stopwords: 0.4200
+Word n-grams (1,2) without Tweet Tokenizer: 0.3403<br />
+Word n-grams (1,2) using Tweet Tokenizer: 0.4267<br />
+Char n-grams (3,5) using Tweet Tokenizer: 0.4181<br />
+Word n-grams (1,2) using Tweet Tokenizer & min_df = 10: 0.4148<br />
+Word n-grams (1,2) using Tweet Tokenizer & min_df = 5: 0.4197<br />
+Word n-grams (1,2) using Tweet Tokenizer & min_df = 2: 0.4255<br />
+Word n-grams (1,3) using Tweet Tokenizer & min_df = default: 0.4267<br />
+Word n-grams (1,2) using Tweet Tokenizer & min_df = default: 0.4210<br />
+Word n-grams (1,3) using Tweet Tokenizer & min_df = default & stopwords: 0.4200<br />
 Word n-grams (1,2) using Tweet Tokenizer & min_df = default & stopwords: 0.4180
 
 #### Neural Network with word embeddings glove.twitter.27B (100D)
