@@ -7,7 +7,7 @@ import sklearn
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfTransformer
-from sklearn.pipeline import Pipeline
+from sklearn.pipeline import Pipeline, FeatureUnion
 from sklearn.linear_model import SGDClassifier
 from sklearn.model_selection import train_test_split
 from nltk.tokenize import TweetTokenizer
@@ -24,7 +24,7 @@ from nltk import pos_tag
 
 def main():
 	#read documents
-	documents = readFile('tweetsAsTuplesFile2.pickle')
+	documents = readFile('tweetsAsTuplesFileSpanish.pickle')
 	
 	#split documents in training and test set
 	train_documents, test_documents = train_test_split(
@@ -75,20 +75,23 @@ def identity(arg):
     Simple identity function works as a passthrough.
     """
     return arg
+
+def tweetIdentity(arg):
+	tokenizer = TweetTokenizer()
+	return tokenizer.tokenize(arg)
 	
 def readFile(file):
 	return pickle.load(open(file, 'rb'))
 	
 def classify(train_tweets, train_categories):
-	text_clf = Pipeline([('preprocessor', CustomPreprocessor()),
-						 ('vectorizer', TfidfVectorizer(tokenizer=identity, preprocessor=None, lowercase=False)),
-						 ('classifier', SGDClassifier(loss='hinge', penalty='l2',
-											   alpha=1e-3, random_state=42,
-											   max_iter=5, tol=None)),
-						])
+	#('preprocessor', CustomPreprocessor()),
+	text_clf = Pipeline([('feats', FeatureUnion([
+						 ('char', TfidfVectorizer(tokenizer=tweetIdentity, preprocessor=None, lowercase=False, analyzer='char', ngram_range=(3,5), min_df=1)),
+						 ('word', TfidfVectorizer(tokenizer=tweetIdentity, preprocessor=None, lowercase=False, analyzer='word', ngram_range=(1,3), min_df=1)),
+						 ])),
+						 ('classifier', SGDClassifier(loss='hinge', penalty='l2', alpha=1e-3, random_state=42, max_iter=20, tol=None))])
 						
 	text_clf.fit(train_tweets, train_categories)  
-	
 	return text_clf
 
 def createLists(documents):
