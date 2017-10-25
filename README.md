@@ -48,6 +48,10 @@ Char n-grams (1,3) using Tweet Tokenizer & min_df = default: 0.291057566287
 #### Neural Network with word embeddings glove.twitter.27B (100D)
 Neural Network (22-10-2017): 0.378
 
+#### SVM FeatureUnion English (25-10-2017)
+Word n-grams (1,3) combined with char n-grams (3,5) using Tweet Tokenizer & default min-df: 0.430482778618
 
-
+#### SVM FeatureUnion Spanish (25-10-2017)
+Word n-grams (1,3) combined with char n-grams (3,5) using Tweet Tokenizer & default min-df: 0.328359713681
+20 iterations: 0.32967032967
 
