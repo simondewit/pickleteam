@@ -21,6 +21,7 @@ from nltk import WordNetLemmatizer
 from nltk import sent_tokenize
 from nltk import pos_tag
 
+from createConfusionMatrix import main as mainCCM
 
 def main():
 	#read documents
@@ -39,8 +40,11 @@ def main():
 	results = classify(train_tweets, train_categories)
 	
 	#evaluate the system
-	evaluation = evaluate(results, test_tweets, test_categories)
+	evaluation, predicted = evaluate(results, test_tweets, test_categories)
 	print(evaluation)
+
+	#create confusion matrix
+	mainCCM(test_categories,predicted) #both variables must be lists
 	
 class CustomPreprocessor(BaseEstimator, TransformerMixin):
 
@@ -104,7 +108,7 @@ def createLists(documents):
 	
 def evaluate(classifier, test_tweets, test_categories):
 	predicted = classifier.predict(test_tweets)
-	return np.mean(predicted == test_categories)
+	return np.mean(predicted == test_categories), predicted
 	
 if __name__ == '__main__':
 	main()
