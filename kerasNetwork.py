@@ -15,12 +15,22 @@ from sklearn.model_selection import train_test_split
 
 from keras.utils import to_categorical
 
+import keras
+import keras.backend as K
+from keras.preprocessing.text import Tokenizer
+from keras.preprocessing.sequence import pad_sequences
+from keras.layers import Dense, Input, Flatten
+from keras.layers import Conv1D, MaxPooling1D, Embedding
+from keras.models import Model
+
 BASE_DIR = ''
 GLOVE_DIR = BASE_DIR + 'glove.twitter.27B/'
 MAX_SEQUENCE_LENGTH = 1000
-MAX_NB_WORDS = 20000
+MAX_NB_WORDS = 15000
 EMBEDDING_DIM = 100
 VALIDATION_SPLIT = 0.2
+batch_size = 128
+epochs = 2
 
 def readFile(file):
 	return pickle.load(open(file, 'rb'))
@@ -35,6 +45,37 @@ def createLists(documents):
 
 	return tweets, categories
 
+def precision(y_true, y_pred):
+     """Precision metric.
+ 
+     Only computes a batch-wise average of precision.
+ 
+     Computes the precision, a metric for multi-label classification of
+     how many selected items are relevant.
+     """
+     true_positives = K.sum(K.round(K.clip(y_true * y_pred, 0, 1)))
+     predicted_positives = K.sum(K.round(K.clip(y_pred, 0, 1)))
+     precision = true_positives / (predicted_positives + K.epsilon())
+     return precision
+
+def recall(y_true, y_pred):
+    """Recall metric.
+
+    Only computes a batch-wise average of recall.
+
+    Computes the recall, a metric for multi-label classification of
+    how many relevant items are selected.
+    """
+    true_positives = K.sum(K.round(K.clip(y_true * y_pred, 0, 1)))
+    possible_positives = K.sum(K.round(K.clip(y_true, 0, 1)))
+    recall = true_positives / (possible_positives + K.epsilon())
+    return recall
+
+def fscore(precision,recall):
+	fscore = 2 * ((precision * recall) / (precision + recall))
+	return fscore
+
+
 def main():
 	#read documents
 	documents = readFile('tweetsAsTuplesFile2.pickle')
@@ -42,14 +83,6 @@ def main():
 	#create seperate lists for tweets and the categories
 	texts, labels = createLists(documents)
 	#test_x, test_y = createLists(test_documents)
-	
-	import keras
-	from keras.preprocessing.text import Tokenizer
-	from keras.preprocessing.sequence import pad_sequences
-	from keras.utils import to_categorical
-	from keras.layers import Dense, Input, Flatten
-	from keras.layers import Conv1D, MaxPooling1D, Embedding
-	from keras.models import Model
 
 	tokenizer = Tokenizer(num_words=MAX_NB_WORDS)
 	tokenizer.fit_on_texts(texts)
@@ -115,10 +148,22 @@ def main():
 	model = Model(sequence_input, preds)
 	model.compile(loss='categorical_crossentropy',
 								optimizer='rmsprop',
-								metrics=['acc'])
+								metrics=['acc',precision,recall])
 
-	model.fit(x_train, y_train, validation_data=(x_val, y_val),
-						epochs=2, batch_size=128)
+	model.fit(x_train, y_train,
+						epochs=epochs, batch_size=batch_size)
+
+	score = model.evaluate(x_val, y_val, batch_size=batch_size)
+
+	print("\n",score)
+
+	#print('Test score:', score[0])
+	#print('Test accuracy:', score[1])
+	print('Test precision:', score[2])
+	print('Test recall:', score[3])
+	print('\nTest fscore:', fscore(score[2],score[3]))
+
+
 
 if __name__ == '__main__':
 	main()
