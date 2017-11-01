@@ -28,10 +28,10 @@ def createLists(documents):
 def main():
 
 	num_words = 5000
-	epochs = 1 #dan is ie tenminste voor het prberen even snel klaar haha
+	epochs = 1
 	batch_size = 128
 
-	documents = readFile('tweetsAsTuplesFileSpanish.pickle')
+	documents = readFile('tweetsAsTuplesFile2.pickle')
 		
 	# split documents in training and test set
 	train_documents, test_documents = train_test_split(
