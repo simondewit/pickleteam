@@ -28,7 +28,7 @@ def createLists(documents):
 def main():
 
 	num_words = 5000
-	epochs = 1 #dan is ie tenminste voor het prberen even snel klaar haha
+	epochs = 1
 	batch_size = 128
 
 	documents = readFile('tweetsAsTuplesFile2.pickle')
