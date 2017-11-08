@@ -20,17 +20,17 @@ def printProgress(iteration, total, prefix = '', suffix = '', decimals = 2, barL
 		print("\n")
 
 def main():
-	tweetIDS = list(open('train_semeval2018task2/crawler/data/tweet_by_ID_30_9_2017__06_51_29.txt.ids'))
-	tweetLabels = list(open('train_semeval2018task2/crawler/data/tweet_by_ID_30_9_2017__06_51_29.txt.labels'))
-	tweetText = list(open('train_semeval2018task2/crawler/data/tweet_by_ID_30_9_2017__06_51_29.txt.text'))
-	tweetsAsTuplesFile = open('tweetsAsTuplesFile2.pickle','wb')
+	tweetText = list(open('trialdata/es_trial.text'))
+	tweetLabels = list(open('trialdata/es_trial.labels'))
+	tweetsAsTuplesFile = open('es-trial.pickle', 'wb')
+
 
 
 	listWithTuples = []
-	for i in tweetIDS:
-		index = tweetIDS.index(i)
-		listWithTuples.append((tweetLabels[index].strip(),tweetText[index].strip()))
-		printProgress(index, len(tweetIDS), prefix = 'Progress:', suffix = 'Complete', barLength = 50)
+	print(tweetLabels)
+	for idx, i in enumerate(tweetLabels):
+		listWithTuples.append((i.strip(),tweetText[idx].strip()))
+		# printProgress(index, len(tweetLabels), prefix = 'Progress:', suffix = 'Complete', barLength = 50)
 	
 	pickle.dump(listWithTuples,tweetsAsTuplesFile)
 

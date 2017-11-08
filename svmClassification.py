@@ -25,11 +25,8 @@ from createConfusionMatrix import main as mainCCM
 
 def main():
 	#read documents
-	documents = readFile('tweetsAsTuplesFileSpanish.pickle')
-	
-	#split documents in training and test set
-	train_documents, test_documents = train_test_split(
-	   documents, test_size=0.1, random_state=42)
+	train_documents = readFile('eng-train.pickle')
+	test_documents = readFile('eng-trial.pickle')
 
 	#create seperate lists for tweets and the categories
 	train_tweets, train_categories = createLists(train_documents)
@@ -40,11 +37,38 @@ def main():
 	results = classify(train_tweets, train_categories)
 	
 	#evaluate the system
-	evaluation, predicted = evaluate(results, test_tweets, test_categories)
+	evaluation, predicted_categories = evaluate(results, test_tweets, test_categories)
 	print(evaluation)
 
 	#create confusion matrix
-	mainCCM(test_categories,predicted) #both variables must be lists
+	mainCCM(test_categories,predicted_categories) #both variables must be lists
+
+	#average scores
+	precisionScoreAverage = sklearn.metrics.precision_score(test_categories,predicted_categories, average="macro")
+	print("\n\nprecision sklearn:", round(precisionScoreAverage,3))
+
+	recallScoreAverage = sklearn.metrics.recall_score(test_categories,predicted_categories, average="macro")
+	print("recall sklearn:", round(recallScoreAverage,3))
+
+	f1ScoreAverage = sklearn.metrics.f1_score(test_categories,predicted_categories, average="macro")
+	print("fscore sklearn:", round(f1ScoreAverage,3),"\n")
+
+	#scores per class
+	labels = ["0","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19"]
+	print("Class \t Precision \t Recall \t F-score")
+	for label in labels:
+		precisionScore = sklearn.metrics.precision_score(test_categories,predicted_categories, average="macro", labels=label)
+		recallScore = sklearn.metrics.recall_score(test_categories,predicted_categories, average="macro", labels=label)
+		f1Score = sklearn.metrics.f1_score(test_categories,predicted_categories, average="macro", labels=label)
+
+		print(label, "\t", round(precisionScore,3), "\t\t", round(recallScore,3), "\t\t", round(f1Score,3), "\t")
+
+
+
+	ourOutput = open('ourOutput.txt','wt')
+	for i in predicted_categories:
+		ourOutput.write(i)
+		ourOutput.write("\n")
 	
 class CustomPreprocessor(BaseEstimator, TransformerMixin):
 

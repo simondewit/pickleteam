@@ -3,7 +3,7 @@ import sys
 
 def main():
 
-	with open('ngramTupleFile.pickle','rb') as f:
+	with open('english_trial.pickle','rb') as f:
 		tweetsAsTuplesFile = pickle.load(f)
 
 		for i in tweetsAsTuplesFile:

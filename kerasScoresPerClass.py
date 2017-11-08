@@ -11,7 +11,7 @@ import sklearn
 
 from sklearn.metrics import classification_report,confusion_matrix
 
-from createConfusionMatrix import main as mainCCM
+# from createConfusionMatrix import main as mainCCM
 
 import os
 os.environ['TF_CPP_MIN_LOG_LEVEL']='2' #remove warnings from tensorflow
@@ -30,14 +30,12 @@ def createLists(documents):
 def main():
 
 	num_words 	= 5000
-	epochs		= 1
+	epochs		= 3
 	batch_size 	= 128
 
 	#new way of splitting test and training
-	train_documents = readFile('tweetsAsTuplesFile2.pickle')
-	print("Train doc", train_documents[:10])
-	test_documents = readFile('tweetsAsTuplesFileTrialEnglish.pickle')
-	print("\nTest doc", test_documents[:10])
+	train_documents = readFile('eng-train.pickle')
+	test_documents = readFile('eng-trial.pickle')
 
 	#old way of splitting test and training
 	# documents = readFile('tweetsAsTuplesFileSpanish.pickle')	
