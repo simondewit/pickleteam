@@ -56,9 +56,9 @@ Word n-grams (1,3) combined with char n-grams (3,5) using Tweet Tokenizer & defa
 20 iterations: 0.32967032967
 
 ### SVM Baseline with correct train/trial division
-ENG Word unigrams: 0.443 
-ENG Word n-grams(1,3) & char n-grams (3,5): 0.519 
-ESP Word unigrams: 0.652
+ENG Word unigrams: 0.443 <br />
+ENG Word n-grams(1,3) & char n-grams (3,5): 0.519 <br />
+ESP Word unigrams: 0.652<br />
 ESP Word n-grams(1,3) & char n-grams(3,5): 0.79
 
 
