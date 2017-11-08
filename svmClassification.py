@@ -25,8 +25,8 @@ from createConfusionMatrix import main as mainCCM
 
 def main():
 	#read documents
-	train_documents = readFile('eng-train.pickle')
-	test_documents = readFile('eng-trial.pickle')
+	train_documents = readFile('es-train.pickle')
+	test_documents = readFile('es-trial.pickle')
 
 	#create seperate lists for tweets and the categories
 	train_tweets, train_categories = createLists(train_documents)

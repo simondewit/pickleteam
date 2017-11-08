@@ -29,8 +29,8 @@ def createLists(documents):
 
 def main():
 
-	num_words 	= 5000
-	epochs		= 3
+	num_words 	= 10000
+	epochs		= 6
 	batch_size 	= 128
 
 	#new way of splitting test and training

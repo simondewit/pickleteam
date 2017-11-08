@@ -47,10 +47,10 @@ def main(test_categories,predicted):
 	matrix_normalized = np.transpose(np.transpose(matrix) / matrix.astype(np.float).sum(axis=1))
 	print(matrix_normalized.round(2)) #horizontal = predicted; vertical = true label
 
-	# #Only available in Linux:
-	# plt.figure()
-	# plot_confusion_matrix(matrix, classes=labels, title='Confusion matrix')
-	# plt.show()
+	#Only available in Linux:
+	plt.figure()
+	plot_confusion_matrix(matrix, classes=labels, title='Confusion matrix')
+	plt.show()
 
 
 if __name__ == '__main__':
