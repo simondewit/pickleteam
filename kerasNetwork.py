@@ -4,6 +4,7 @@ import os
 import numpy as np
 import string
 
+
 import sklearn
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.feature_extraction.text import CountVectorizer
@@ -22,7 +23,7 @@ from nltk import WordNetLemmatizer
 from nltk import sent_tokenize
 from nltk import pos_tag
 
-from createConfusionMatrix import main as mainCCM
+#from createConfusionMatrix import main as mainCCM
 
 from keras.utils import to_categorical
 
@@ -72,6 +73,7 @@ def main():
 	print('Shape of label tensor:', labels.shape)
 
 	print(train_tweets[0])
+	print()
 	train_tweets_trans = data[0:len(train_tweets)]
 	train_categories_trans = labels[0:len(train_categories)]
 
