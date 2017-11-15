@@ -45,7 +45,7 @@ def main(test_categories,predicted_categories):
 	#print(matrix)
 
 	matrix_normalized = np.transpose(np.transpose(matrix) / matrix.astype(np.float).sum(axis=1))
-	print(matrix_normalized.round(2)) #horizontal = predicted; vertical = true label
+	#print(matrix_normalized.round(2)) #horizontal = predicted; vertical = true label
 
 	for item in labels:
 		if item == labels[0]:
