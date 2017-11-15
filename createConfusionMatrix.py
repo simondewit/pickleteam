@@ -36,9 +36,9 @@ def plot_confusion_matrix(cm, classes, normalize=True, title='Confusion matrix',
 	plt.ylabel('True label')
 	plt.xlabel('Predicted label')
 
-def main(test_categories,predicted):
+def main(test_categories,predicted_categories):
 	y_true = test_categories
-	y_pred = predicted
+	y_pred = predicted_categories
 	labels = ['0','1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19']
 
 	matrix = sklearn.metrics.confusion_matrix(y_true, y_pred, labels=labels)
@@ -47,10 +47,24 @@ def main(test_categories,predicted):
 	matrix_normalized = np.transpose(np.transpose(matrix) / matrix.astype(np.float).sum(axis=1))
 	print(matrix_normalized.round(2)) #horizontal = predicted; vertical = true label
 
-	#Only available in Linux:
-	plt.figure()
-	plot_confusion_matrix(matrix, classes=labels, title='Confusion matrix')
-	plt.show()
+	for item in labels:
+		if item == labels[0]:
+			print("{:>8s}".format(item), end="")
+		else:
+			print("{:>8s}".format(item), end="")
+
+	for i,line in enumerate(matrix_normalized):
+		print()
+		print("{:<2s}".format(labels[i]), end="")
+		for item in line:
+			print("{:8.2f}".format(item), end="")
+
+
+	print()
+	# #Only available in Linux:
+	# plt.figure()
+	# plot_confusion_matrix(matrix, classes=labels, title='Confusion matrix')
+	# plt.show()
 
 
 if __name__ == '__main__':
