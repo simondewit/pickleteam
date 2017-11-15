@@ -29,13 +29,13 @@ MAX_SEQUENCE_LENGTH = 1000
 EMBEDDING_DIM = 200
 VALIDATION_SPLIT = 0.2
 batch_size = 128
-epochs = 5
+epochs = 6
 
 def main():
 	#read documents
 	train_documents = readFile('eng-train.pickle')
 	test_documents = readFile('eng-trial.pickle')
-	
+
 	#create seperate lists for tweets and the categories
 	train_tweets, train_categories = createLists(train_documents)
 	test_tweets, test_categories = createLists(test_documents)
@@ -58,7 +58,7 @@ def main():
 	print('Found %s unique tokens.' % len(word_index))
 
 	data = pad_sequences(sequences, maxlen=MAX_SEQUENCE_LENGTH)
-	labels = to_categorical(np.asarray(labels))
+	labels = to_categorical(list(map(int, labels)))
 	print('Shape of data tensor:', data.shape)
 	print('Shape of label tensor:', labels.shape)
 
@@ -143,7 +143,7 @@ def main():
 	# print(test_categories[:25])
 
 	# #creates confusion matrix
-	# mainCCM(test_categories,predicted_categories)
+	mainCCM(test_categories,predicted_categories)
 
 	model.save('my_model.h5')  # creates a HDF5 file 'my_model.h5'
 	del model  # deletes the existing model
