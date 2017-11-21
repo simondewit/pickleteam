@@ -25,7 +25,6 @@ from createConfusionMatrix import main as mainCCM
 
 BASE_DIR = ''
 GLOVE_DIR = BASE_DIR + 'glove.twitter.27B/'
-MAX_SEQUENCE_LENGTH = 1000
 EMBEDDING_DIM = 200
 VALIDATION_SPLIT = 0.2
 batch_size = 128
@@ -57,7 +56,8 @@ def main():
 	word_index = tokenizer.word_index
 	print('Found %s unique tokens.' % len(word_index))
 
-	data = pad_sequences(sequences, maxlen=MAX_SEQUENCE_LENGTH)
+	data = pad_sequences(sequences)
+	import ipdb; ipdb.set_trace()
 	labels = to_categorical(list(map(int, labels)))
 	print('Shape of data tensor:', data.shape)
 	print('Shape of label tensor:', labels.shape)
@@ -84,9 +84,7 @@ def main():
 					# words not found in embedding index will be all-zeros.
 					embedding_matrix[i] = embedding_vector
 
-	embedding_layer = Embedding(len(word_index) + 1,
-															EMBEDDING_DIM,
-															weights=[embedding_matrix])
+	embedding_layer = Embedding(len(word_index) + 1, EMBEDDING_DIM, mask_zero = True, weights=[embedding_matrix], trainable = True)
 
 	print('Found %s word vectors.' % len(embeddings_index))
 
