@@ -61,4 +61,5 @@ ENG Word n-grams(1,3) & char n-grams (3,5): 0.519 <br />
 ESP Word unigrams: 0.652<br />
 ESP Word n-grams(1,3) & char n-grams(3,5): 0.79
 
-
+### Keras LSTM Word Embeddings (21-11-2017)
+ENG:  0.427 <br />
