@@ -27,14 +27,14 @@ BASE_DIR = ''
 GLOVE_DIR = BASE_DIR + 'glove.twitter.27B/'
 EMBEDDING_DIM = 200
 batch_size = 128
-epochs = 6
+epochs = 10
 
 def main():
 	#read documents
 	train_documents = readFile('eng-train.pickle')
 	test_documents = readFile('eng-trial.pickle')
 
-	#create seperate lists for tweets and the categories
+	#create separate lists for tweets and the categories
 	train_tweets, train_categories = createLists(train_documents)
 	test_tweets, test_categories = createLists(test_documents)
 
