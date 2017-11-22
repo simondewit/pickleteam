@@ -26,7 +26,6 @@ from createConfusionMatrix import main as mainCCM
 BASE_DIR = ''
 GLOVE_DIR = BASE_DIR + 'glove.twitter.27B/'
 EMBEDDING_DIM = 200
-VALIDATION_SPLIT = 0.2
 batch_size = 128
 epochs = 6
 
