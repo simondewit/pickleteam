@@ -23,10 +23,11 @@ from nltk import pos_tag
 
 from createConfusionMatrix import main as mainCCM
 
+
 def main():
 	#read documents
-	train_documents = readFile('es-train.pickle')
-	test_documents = readFile('es-trial.pickle')
+	train_documents = readFile('eng-train.pickle')
+	test_documents = readFile('eng-trial.pickle')
 
 	#create seperate lists for tweets and the categories
 	train_tweets, train_categories = createLists(train_documents)
@@ -40,8 +41,6 @@ def main():
 	evaluation, predicted_categories = evaluate(results, test_tweets, test_categories)
 	print(evaluation)
 
-	#create confusion matrix
-	mainCCM(test_categories,predicted_categories) #both variables must be lists
 
 	#average scores
 	precisionScoreAverage = sklearn.metrics.precision_score(test_categories,predicted_categories, average="macro")
@@ -52,6 +51,7 @@ def main():
 
 	f1ScoreAverage = sklearn.metrics.f1_score(test_categories,predicted_categories, average="macro")
 	print("fscore sklearn:", round(f1ScoreAverage,3),"\n")
+
 
 	#scores per class
 	labels = ["0","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16","17","18","19"]
@@ -64,19 +64,17 @@ def main():
 		print(label, "\t", round(precisionScore,3), "\t\t", round(recallScore,3), "\t\t", round(f1Score,3), "\t")
 
 
-
-	ourOutput = open('ourOutput.txt','wt')
-	for i in predicted_categories:
-		ourOutput.write(i)
-		ourOutput.write("\n")
+	print()
+	#create confusion matrix
+	# mainCCM(test_categories,predicted_categories) #both variables must be lists
 	
 class CustomPreprocessor(BaseEstimator, TransformerMixin):
 
-    def __init__(self, stopwords=None, punct=None,
+    def __init__(self, stopwords=False, punct=None,
                  lower=True, strip=True):
         self.lower      = lower
         self.strip      = strip
-        #self.stopwords  = stopwords or set(sw.words('english'))
+        # self.stopwords  = stopwords or set(sw.words('english'))
 
     def fit(self, X, y=None):
         return self
@@ -114,11 +112,12 @@ def readFile(file):
 def classify(train_tweets, train_categories):
 	#('preprocessor', CustomPreprocessor()),
 	text_clf = Pipeline([('feats', FeatureUnion([
-						 ('char', TfidfVectorizer(tokenizer=tweetIdentity, preprocessor=None, lowercase=False, analyzer='char', ngram_range=(3,5), min_df=1)),
-						 ('word', TfidfVectorizer(tokenizer=tweetIdentity, preprocessor=None, lowercase=False, analyzer='word', ngram_range=(1,3), min_df=1)),
+						 ('char', TfidfVectorizer(tokenizer=tweetIdentity, norm="l1", preprocessor=None, stop_words="english", lowercase=False, analyzer='char', ngram_range=(3,5), min_df=1)),#, max_features=100000)),
+						 ('word', TfidfVectorizer(tokenizer=tweetIdentity, norm="l1", preprocessor=None, stop_words="english", lowercase=False, analyzer='word', ngram_range=(1,3), min_df=1)),#, max_features=100000)),
 						 ])),
-						 ('classifier', SGDClassifier(loss='hinge', penalty='l2', alpha=1e-3, random_state=42, max_iter=20, tol=None))])
-						
+						 ('classifier', SGDClassifier(loss='hinge', penalty='l2', alpha=1e-3, random_state=42, max_iter=50, tol=None))])
+	
+
 	text_clf.fit(train_tweets, train_categories)  
 	return text_clf
 
@@ -127,7 +126,10 @@ def createLists(documents):
 	categories = []
 	for category, tweet in documents:
 		categories.append(category)
+		if "…" in tweet:
+			tweet = tweet.replace("…","...")
 		tweets.append(tweet)
+
 	return tweets, categories
 	
 def evaluate(classifier, test_tweets, test_categories):
