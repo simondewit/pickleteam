@@ -62,4 +62,6 @@ ESP Word unigrams: 0.652<br />
 ESP Word n-grams(1,3) & char n-grams(3,5): 0.79
 
 ### Keras LSTM Word Embeddings (21-11-2017)
-ENG:  0.427 <br />
+Default model: LSTM with default Keras parameters, Dropout of 0.2 before and after, 200D Glove Twitter embeddings. Batch size of 128.<br />
+ENG:  0.427 (6 epochs) <br />
+ENG w/o excess padding, with zero masking, no Dropout before LSTM: 0.470 (10 epochs)
