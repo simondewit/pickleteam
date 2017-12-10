@@ -57,7 +57,7 @@ def main():
 	print('Found %s unique tokens.' % len(word_index))
 
 	data = pad_sequences(sequences)
-	import ipdb; ipdb.set_trace()
+	# import ipdb; ipdb.set_trace()
 	labels = to_categorical(list(map(int, labels)))
 	print('Shape of data tensor:', data.shape)
 	print('Shape of label tensor:', labels.shape)
