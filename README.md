@@ -66,4 +66,6 @@ Default model: LSTM with default Keras parameters, Dropout of 0.2 before and aft
 ENG:  0.427 (6 epochs) <br />
 ENG w/o excess padding, with zero masking, no Dropout before LSTM: 0.470 (10 epochs)
 
-SVM with SnowballStemmer as preprocesser caused a small drop in accuracy, about 1/2 %.
+### SVM optimizations
+SVM with SnowballStemmer as preprocesser caused a small drop in accuracy, about 1/2 %. <br />
+(12/12/2017) SVM added strip_handles=True, reduce_len=True to TweetTokenizer() (tested without stopwords due to time): 0.532 ENG; 0.794 ES
