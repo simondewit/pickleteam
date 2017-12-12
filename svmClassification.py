@@ -68,33 +68,43 @@ def main():
 	#create confusion matrix
 	# mainCCM(test_categories,predicted_categories) #both variables must be lists
 	
-class CustomPreprocessor(BaseEstimator, TransformerMixin):
+# class CustomPreprocessor(BaseEstimator, TransformerMixin):
 
-    def __init__(self, stopwords=False, punct=None,
-                 lower=True, strip=True):
-        self.lower      = lower
-        self.strip      = strip
-        # self.stopwords  = stopwords or set(sw.words('english'))
+#     def __init__(self, stopwords=None, punct=None,
+#                  lower=True, strip=True):
+#         self.lower      = lower
+#         self.strip      = strip
+#         # self.stopwords  = stopwords or set(sw.words('spanish'))
 
-    def fit(self, X, y=None):
-        return self
+#     def fit(self, X, y=None):
+#         return self
 
-    def inverse_transform(self, X):
-        return [" ".join(doc) for doc in X]
+#     def inverse_transform(self, X):
+#         return [" ".join(doc) for doc in X]
 
-    def transform(self, X):
-        return [list(self.tokenize(doc)) for doc in X]
+#     def transform(self, X):
+#         return [list(self.tokenize(doc)) for doc in X]
 
-    def tokenize(self, document):
-        tokenizer = TweetTokenizer()
-        tokenized_tweet = tokenizer.tokenize(document)
-        # Tokenize tweet
-        for token in tokenized_tweet:
-            # Apply preprocessing to the token
-            token = token.lower() if self.lower else token
-            token = token.strip() if self.strip else token
-            yield token
+#     def tokenize(self, document):
+#         tokenizer = TweetTokenizer()
+#         tokenized_tweet = tokenizer.tokenize(document)
+#         # Tokenize tweet
+#         for token in tokenized_tweet:
+#             # Apply preprocessing to the token
+#             token = token.lower() if self.lower else token
+#             token = token.strip() if self.strip else token
+#             yield token
 	
+def CustomPreprocessor(arg):
+	# print(arg)
+	argListNew = []
+	argList = arg.split()
+	for elem in argList:
+		if elem not in sw.words('spanish'):
+			argListNew.append(elem)
+	arg = " ".join(argListNew)
+	return arg
+
 
 def identity(arg):
     """
@@ -112,8 +122,8 @@ def readFile(file):
 def classify(train_tweets, train_categories):
 	#('preprocessor', CustomPreprocessor()),
 	text_clf = Pipeline([('feats', FeatureUnion([
-						 ('char', TfidfVectorizer(tokenizer=tweetIdentity, norm="l1", preprocessor=None, stop_words="english", lowercase=False, analyzer='char', ngram_range=(3,5), min_df=1)),#, max_features=100000)),
-						 ('word', TfidfVectorizer(tokenizer=tweetIdentity, norm="l1", preprocessor=None, stop_words="english", lowercase=False, analyzer='word', ngram_range=(1,3), min_df=1)),#, max_features=100000)),
+						 ('char', TfidfVectorizer(tokenizer=tweetIdentity, norm="l1", preprocessor=None, preprocessor=CustomPreprocessor, lowercase=False, analyzer='char', ngram_range=(3,5), min_df=1)),#, max_features=100000)),
+						 ('word', TfidfVectorizer(tokenizer=tweetIdentity, norm="l1", preprocessor=None, preprocessor=CustomPreprocessor, lowercase=False, analyzer='word', ngram_range=(1,3), min_df=1)),#, max_features=100000)),
 						 ])),
 						 ('classifier', SGDClassifier(loss='hinge', penalty='l2', alpha=1e-3, random_state=42, max_iter=50, tol=None))])
 	
