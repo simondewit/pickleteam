@@ -27,8 +27,8 @@ from nltk.stem import SnowballStemmer
 
 def main():
 	#read documents
-	train_documents = readFile('eng-train.pickle')
-	test_documents = readFile('eng-trial.pickle')
+	train_documents = readFile('es-train.pickle')
+	test_documents = readFile('es-trial.pickle')
 
 	#create seperate lists for tweets and the categories
 	train_tweets, train_categories = createLists(train_documents)
@@ -130,8 +130,8 @@ def readFile(file):
 def classify(train_tweets, train_categories):
 	#('preprocessor', CustomPreprocessor()),
 	text_clf = Pipeline([('feats', FeatureUnion([
-						 ('char', TfidfVectorizer(tokenizer=tweetIdentity, norm="l1", preprocessor=None, preprocessor=CustomPreprocessor, lowercase=False, analyzer='char', ngram_range=(3,5), min_df=1)),#, max_features=100000)),
-						 ('word', TfidfVectorizer(tokenizer=tweetIdentity, norm="l1", preprocessor=None, preprocessor=CustomPreprocessor, lowercase=False, analyzer='word', ngram_range=(1,3), min_df=1)),#, max_features=100000)),
+						 ('char', TfidfVectorizer(tokenizer=tweetIdentity, norm="l1", preprocessor=CustomPreprocessor, lowercase=False, analyzer='char', ngram_range=(3,5), min_df=1)),#, max_features=100000)),
+						 ('word', TfidfVectorizer(tokenizer=tweetIdentity, norm="l1", preprocessor=CustomPreprocessor, lowercase=False, analyzer='word', ngram_range=(1,3), min_df=1))#, max_features=100000)),
 						 ])),
 						 ('classifier', SGDClassifier(loss='hinge', penalty='l2', alpha=1e-3, random_state=42, max_iter=50, tol=None))])
 	
