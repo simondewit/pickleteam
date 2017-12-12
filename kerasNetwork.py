@@ -3,6 +3,7 @@ import sys
 import os
 import numpy as np
 import string
+import re
 
 from nltk.tokenize import TweetTokenizer
 
@@ -46,7 +47,11 @@ def main():
 	#since the Tokenizer of keras expects a text, we tokenize the tweets, but also join it together as a string
 	tweetTokenizer = TweetTokenizer()
 	for tweet in texts:
-		tokenizedTexts.append('|'.join(tweetTokenizer.tokenize(tweet)))
+		tokenizedText = '|'.join(tweetTokenizer.tokenize(tweet))
+		tokenizedText = re.sub('…', '.|.|.', tokenizedText) # Replace … token caused by Instagram posts
+		tokenizedText = re.sub(b'\xef\xb8\x8f'.decode('utf-8') + '\|', '', tokenizedText) # Remove weird character causing empty tokens
+		tokenizedText = re.sub(r"('m|'s|n't|'re|'ve|'ll|'d)\b", r'|\1', tokenizedText) # Split contractions to match word embeddings better
+		tokenizedTexts.append(tokenizedText)
 	
 	tokenizer = Tokenizer(split="|",)
 	tokenizer.fit_on_texts(tokenizedTexts)
