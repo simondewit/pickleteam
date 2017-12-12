@@ -101,7 +101,7 @@ def CustomPreprocessor(arg):
 	argListNew = []
 	argList = arg.split()
 	for elem in argList:
-		if elem not in sw.words('spanish'):
+		if elem not in sw.words('english'):
 			argListNew.append(elem)
 	arg = " ".join(argListNew)
 	return arg
@@ -121,7 +121,7 @@ def customStemmer(arg):
 	return stm.stem(arg) 
 
 def tweetIdentity(arg):
-	tokenizer = TweetTokenizer()
+	tokenizer = TweetTokenizer(strip_handles=True, reduce_len=True)
 	return tokenizer.tokenize(arg)
 	
 def readFile(file):
@@ -130,8 +130,8 @@ def readFile(file):
 def classify(train_tweets, train_categories):
 	#('preprocessor', CustomPreprocessor()),
 	text_clf = Pipeline([('feats', FeatureUnion([
-						 ('char', TfidfVectorizer(tokenizer=tweetIdentity, norm="l1", preprocessor=CustomPreprocessor, lowercase=False, analyzer='char', ngram_range=(3,5), min_df=1)),#, max_features=100000)),
-						 ('word', TfidfVectorizer(tokenizer=tweetIdentity, norm="l1", preprocessor=CustomPreprocessor, lowercase=False, analyzer='word', ngram_range=(1,3), min_df=1))#, max_features=100000)),
+						 ('char', TfidfVectorizer(tokenizer=tweetIdentity, norm="l1", preprocessor=None, lowercase=False, analyzer='char', ngram_range=(3,5), min_df=1)),#, max_features=100000)),
+						 ('word', TfidfVectorizer(tokenizer=tweetIdentity, norm="l1", preprocessor=None, lowercase=False, analyzer='word', ngram_range=(1,3), min_df=1))#, max_features=100000)),
 						 ])),
 						 ('classifier', SGDClassifier(loss='hinge', penalty='l2', alpha=1e-3, random_state=42, max_iter=50, tol=None))])
 	
