@@ -71,5 +71,5 @@ Same, but 20 epochs: 0.553
 ### SVM optimizations
 SVM with SnowballStemmer as preprocesser caused a small drop in accuracy, about 1/2 %. <br />
 (12/12/2017) SVM added strip_handles=True, reduce_len=True to TweetTokenizer() (tested without stopwords due to time): 0.532 ENG; 0.796 ES (with stopwords) <br/>
-(13/12/2017) Added POS-tags: ENG = 0.556, ES = 0.804
+(13/12/2017) Added POS-tags: ENG = 0.556, ES = 0.804 <br/>
 (13/12/2017) Changed N-gram range to (1,10): ENG = 0.583, ES = 0.821
