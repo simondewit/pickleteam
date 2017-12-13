@@ -20,9 +20,11 @@ from nltk import wordpunct_tokenize
 from nltk import WordNetLemmatizer
 from nltk import sent_tokenize
 from nltk import pos_tag
+from nltk.stem import WordNetLemmatizer 
 
 #from createConfusionMatrix import main as mainCCM
-from nltk.stem import SnowballStemmer
+from nltk.stem import SnowballStemmer, PorterStemmer, LancasterStemmer
+from nltk.stem.lancaster import LancasterStemmer
 
 
 def main():
@@ -117,8 +119,17 @@ def customStemmer(arg):
 	"""
     Preprocesser function to test different stemmers.
     """
-	stm = SnowballStemmer('english')
-	return stm.stem(arg) 
+	#st = SnowballStemmer('english')
+	#st = PorterStemmer()
+	st = LancasterStemmer()
+	return st.stem(arg) 
+
+def customLemmatizer(arg):
+	"""
+    Preprocesser function to test different lemma.
+    """
+	wnl = WordNetLemmatizer()
+	return wnl.lemmatize(arg) 
 
 def tweetIdentity(arg):
 	tokenizer = TweetTokenizer(strip_handles=True, reduce_len=True)
@@ -129,10 +140,10 @@ def readFile(file):
 	
 def classify(train_tweets, train_categories):
 	#('preprocessor', CustomPreprocessor()),
-	text_clf = Pipeline([('feats', FeatureUnion([
-						 ('char', TfidfVectorizer(tokenizer=tweetIdentity, norm="l1", preprocessor=CustomPreprocessor, lowercase=False, analyzer='char', ngram_range=(3,5), min_df=1)),#, max_features=100000)),
-						 ('word', TfidfVectorizer(tokenizer=tweetIdentity, norm="l1", preprocessor=CustomPreprocessor, lowercase=False, analyzer='word', ngram_range=(1,3), min_df=1))#, max_features=100000)),
-						 ])),
+	text_clf = Pipeline([#[('feats', FeatureUnion([
+						 #('char', TfidfVectorizer(tokenizer=tweetIdentity, norm="l1", preprocessor=CustomPreprocessor, lowercase=False, analyzer='char', ngram_range=(3,5), min_df=1)),#, max_features=100000)),
+						 ('word', TfidfVectorizer(tokenizer=tweetIdentity, norm="l1", preprocessor=customStemmer, lowercase=False, analyzer='word', ngram_range=(1,3), min_df=1)),#, max_features=100000)),
+						 #])),
 						 ('classifier', SGDClassifier(loss='hinge', penalty='l2', alpha=1e-3, random_state=42, max_iter=50, tol=None))])
 	
 
