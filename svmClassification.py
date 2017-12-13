@@ -21,6 +21,7 @@ from nltk import WordNetLemmatizer
 from nltk import sent_tokenize
 from nltk import pos_tag
 from nltk.stem import WordNetLemmatizer 
+import nltk
 
 #from createConfusionMatrix import main as mainCCM
 from nltk.stem import SnowballStemmer, PorterStemmer, LancasterStemmer
@@ -70,44 +71,26 @@ def main():
 	print()
 	#create confusion matrix
 	# mainCCM(test_categories,predicted_categories) #both variables must be lists
-	
-# class CustomPreprocessor(BaseEstimator, TransformerMixin):
 
-#     def __init__(self, stopwords=None, punct=None,
-#                  lower=True, strip=True):
-#         self.lower      = lower
-#         self.strip      = strip
-#         # self.stopwords  = stopwords or set(sw.words('spanish'))
+	ourOutput = open('ourOutputEnglish.txt','wt')
+	for i in predicted_categories:
+		ourOutput.write(i)
+		ourOutput.write("\n")
 
-#     def fit(self, X, y=None):
-#         return self
+	goldOutput = open('goldOutputEnglish.txt','wt')
+	for i in test_categories:
+		goldOutput.write(i)
+		goldOutput.write("\n")
 
-#     def inverse_transform(self, X):
-#         return [" ".join(doc) for doc in X]
+	# ourOutput = open('ourOutputSpanish.txt','wt')
+	# for i in predicted_categories:
+	# 	ourOutput.write(i)
+	# 	ourOutput.write("\n")
 
-#     def transform(self, X):
-#         return [list(self.tokenize(doc)) for doc in X]
-
-#     def tokenize(self, document):
-#         tokenizer = TweetTokenizer()
-#         tokenized_tweet = tokenizer.tokenize(document)
-#         # Tokenize tweet
-#         for token in tokenized_tweet:
-#             # Apply preprocessing to the token
-#             token = token.lower() if self.lower else token
-#             token = token.strip() if self.strip else token
-#             yield token
-	
-def CustomPreprocessor(arg):
-	# print(arg)
-	argListNew = []
-	argList = arg.split()
-	for elem in argList:
-		if elem not in sw.words('english'):
-			argListNew.append(elem)
-	arg = " ".join(argListNew)
-	return arg
-
+	# goldOutput = open('goldOutputSpanish.txt','wt')
+	# for i in test_categories:
+	# 	goldOutput.write(i)
+	# 	goldOutput.write("\n")
 
 def identity(arg):
     """
@@ -133,8 +116,12 @@ def customLemmatizer(arg):
 	return st.stem(wnl.lemmatize(arg))
 
 def tweetIdentity(arg):
+	# tokenizer = TweetTokenizer(strip_handles=True, reduce_len=True)
+	# return tokenizer.tokenize(arg)
+
 	tokenizer = TweetTokenizer(strip_handles=True, reduce_len=True)
-	return tokenizer.tokenize(arg)
+	tokens = tokenizer.tokenize(arg)
+	return [token+"_POS-"+tag for token, tag in nltk.pos_tag(tokens)]
 	
 def readFile(file):
 	return pickle.load(open(file, 'rb'))
@@ -143,7 +130,7 @@ def classify(train_tweets, train_categories):
 	#('preprocessor', CustomPreprocessor()),
 	text_clf = Pipeline([#[('feats', FeatureUnion([
 						 #('char', TfidfVectorizer(tokenizer=tweetIdentity, norm="l1", preprocessor=CustomPreprocessor, lowercase=False, analyzer='char', ngram_range=(3,5), min_df=1)),#, max_features=100000)),
-						 ('word', TfidfVectorizer(tokenizer=tweetIdentity, norm="l1", preprocessor=customLemmatizer, stop_words=sw.words('english'), lowercase=True, analyzer='word', ngram_range=(1,3), min_df=1)),#, max_features=100000)),
+						 ('word', TfidfVectorizer(tokenizer=tweetIdentity, norm="l1", preprocessor=customLemmatizer, stop_words=sw.words('english'), lowercase=False, analyzer='word', ngram_range=(1,3), min_df=1)),#, max_features=100000)),
 						 #])),
 						 ('classifier', SGDClassifier(loss='hinge', penalty='l2', alpha=1e-3, random_state=42, max_iter=50, tol=None))])
 	
