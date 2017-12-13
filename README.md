@@ -66,6 +66,7 @@ Default model: LSTM with default Keras parameters, Dropout of 0.2 before and aft
 ENG:  0.427 (6 epochs) <br />
 ENG w/o excess padding, with zero masking, no Dropout before LSTM: 0.470 (10 epochs)
 Same, but with fixing of empty tokens, ..., and contractions in tokenization: 0.525 (10 epochs)
+Same, but 20 epochs: 0.553
 
 ### SVM optimizations
 SVM with SnowballStemmer as preprocesser caused a small drop in accuracy, about 1/2 %. <br />
