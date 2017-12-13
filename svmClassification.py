@@ -92,21 +92,6 @@ def main():
 	# 	goldOutput.write(i)
 	# 	goldOutput.write("\n")
 
-def identity(arg):
-    """
-    Simple identity function works as a passthrough.
-    """
-    return arg
-
-def customStemmer(arg):
-	"""
-    Preprocesser function to test different stemmers.
-    """
-	#st = SnowballStemmer('english')
-	st = PorterStemmer()
-	#st = LancasterStemmer()
-	return st.stem(arg) 
-
 def customLemmatizer(arg):
 	"""
     Preprocesser function to test different lemma.
@@ -130,7 +115,7 @@ def classify(train_tweets, train_categories):
 	#('preprocessor', CustomPreprocessor()),
 	text_clf = Pipeline([#[('feats', FeatureUnion([
 						 #('char', TfidfVectorizer(tokenizer=tweetIdentity, norm="l1", preprocessor=CustomPreprocessor, lowercase=False, analyzer='char', ngram_range=(3,5), min_df=1)),#, max_features=100000)),
-						 ('word', TfidfVectorizer(tokenizer=tweetIdentity, norm="l1", preprocessor=customLemmatizer, stop_words=sw.words('english'), lowercase=False, analyzer='word', ngram_range=(1,3), min_df=1)),#, max_features=100000)),
+						 ('word', TfidfVectorizer(tokenizer=tweetIdentity, norm="l1", preprocessor=customLemmatizer, stop_words=sw.words('english'), lowercase=False, analyzer='word', ngram_range=(1,5), min_df=1)),#, max_features=100000)),
 						 #])),
 						 ('classifier', SGDClassifier(loss='hinge', penalty='l2', alpha=1e-3, random_state=42, max_iter=50, tol=None))])
 	
@@ -143,8 +128,8 @@ def createLists(documents):
 	categories = []
 	for category, tweet in documents:
 		categories.append(category)
-		if "…" in tweet:
-			tweet = tweet.replace("…","...")
+		# if "…" in tweet:
+		# 	tweet = tweet.replace("…","...")
 		tweets.append(tweet)
 
 	return tweets, categories
