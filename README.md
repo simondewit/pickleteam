@@ -66,7 +66,11 @@ Default model: LSTM with default Keras parameters, Dropout of 0.2 before and aft
 ENG:  0.427 (6 epochs) <br />
 ENG w/o excess padding, with zero masking, no Dropout before LSTM: 0.470 (10 epochs)
 Same, but with fixing of empty tokens, ..., and contractions in tokenization: 0.525 (10 epochs)
+Same, but 20 epochs: 0.553
+Same, but with Dropout of 0.2 before LSTM as well: 0.529
 
 ### SVM optimizations
 SVM with SnowballStemmer as preprocesser caused a small drop in accuracy, about 1/2 %. <br />
-(12/12/2017) SVM added strip_handles=True, reduce_len=True to TweetTokenizer() (tested without stopwords due to time): 0.532 ENG; 0.796 ES (with stopwords)
+(12/12/2017) SVM added strip_handles=True, reduce_len=True to TweetTokenizer() (tested without stopwords due to time): 0.532 ENG; 0.796 ES (with stopwords) <br/>
+(13/12/2017) Added POS-tags: ENG = 0.556, ES = 0.804 <br/>
+(13/12/2017) Changed N-gram range to (1,10): ENG = 0.583, ES = 0.821
