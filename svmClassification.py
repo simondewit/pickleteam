@@ -100,6 +100,29 @@ def customLemmatizer(arg):
 	st = PorterStemmer()
 	return st.stem(wnl.lemmatize(arg))
 
+class tweetFeatures(BaseEstimator, TransformerMixin):
+
+	def fit(self, X, y=None):
+		return self
+
+	def transform(self, X):
+		n = 0
+		if n == 0:
+			#nar of words
+			return [[len(X)]]
+		elif n == 1: 
+			#nr of unique words
+			return [len(set(X))]
+		elif n == 2:
+			#nr of chars
+			return [sum(len(token) for token in X)]
+		elif n == 3: 
+			#nr of unique chars
+			return [sum(len(token) for token in set(X))]
+		elif n == 4:
+			return [[len(x)] for x in X]
+
+
 def tweetIdentity(arg):
 	# tokenizer = TweetTokenizer(strip_handles=True, reduce_len=True)
 	# return tokenizer.tokenize(arg)
@@ -113,10 +136,17 @@ def readFile(file):
 	
 def classify(train_tweets, train_categories):
 	#('preprocessor', CustomPreprocessor()),
-	text_clf = Pipeline([#[('feats', FeatureUnion([
-						 #('char', TfidfVectorizer(tokenizer=tweetIdentity, norm="l1", preprocessor=CustomPreprocessor, lowercase=False, analyzer='char', ngram_range=(3,5), min_df=1)),#, max_features=100000)),
+	# text_clf = Pipeline([#[('feats', FeatureUnion([
+	# 					 #('char', TfidfVectorizer(tokenizer=tweetIdentity, norm="l1", preprocessor=CustomPreprocessor, lowercase=False, analyzer='char', ngram_range=(3,5), min_df=1)),#, max_features=100000)),
+	# 					 ('word', TfidfVectorizer(tokenizer=tweetIdentity, norm="l1", preprocessor=customLemmatizer, stop_words=sw.words('english'), lowercase=False, analyzer='word', ngram_range=(1,10), min_df=1)),#, max_features=100000)),
+	# 					 #])),
+	# 					 ('classifier', SGDClassifier(loss='hinge', penalty='l2', alpha=1e-3, random_state=42, max_iter=50, tol=None))])
+
+	# test by simon
+	text_clf = Pipeline([('feats', FeatureUnion([
+						 ('tweetfeats', tweetFeatures()),#, max_features=100000)),
 						 ('word', TfidfVectorizer(tokenizer=tweetIdentity, norm="l1", preprocessor=customLemmatizer, stop_words=sw.words('english'), lowercase=False, analyzer='word', ngram_range=(1,10), min_df=1)),#, max_features=100000)),
-						 #])),
+						 ])),
 						 ('classifier', SGDClassifier(loss='hinge', penalty='l2', alpha=1e-3, random_state=42, max_iter=50, tol=None))])
 	
 
