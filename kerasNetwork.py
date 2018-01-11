@@ -94,7 +94,7 @@ def main():
 
 	model = Sequential()
 	model.add(embedding_layer)
-	model.add(Dropout(0.2))
+#	model.add(Dropout(0.2))
 	model.add(LSTM(EMBEDDING_DIM))
 	model.add(Dropout(0.2))
 	model.add(Dense(labels.shape[1], activation='sigmoid'))
