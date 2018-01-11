@@ -12,6 +12,7 @@ from sklearn.linear_model import SGDClassifier
 from sklearn.model_selection import train_test_split
 from nltk.tokenize import TweetTokenizer
 from sklearn import svm
+from sklearn.svm import SVC
 from sklearn.base import BaseEstimator, TransformerMixin
 
 from nltk.corpus import stopwords as sw
@@ -27,7 +28,6 @@ import nltk
 from nltk.stem import SnowballStemmer, PorterStemmer, LancasterStemmer
 from nltk.stem.lancaster import LancasterStemmer
 
-
 def main():
 	#read documents
 	train_documents = readFile('eng-train.pickle')
@@ -36,9 +36,7 @@ def main():
 	#create seperate lists for tweets and the categories
 	train_tweets, train_categories = createLists(train_documents)
 	test_tweets, test_categories = createLists(test_documents)
-	
-	#train the system
-	#text_clf = classify(train_tweets, train_categories)
+
 	results = classify(train_tweets, train_categories)
 	
 	#evaluate the system
@@ -66,7 +64,6 @@ def main():
 		f1Score = sklearn.metrics.f1_score(test_categories,predicted_categories, average="macro", labels=label)
 
 		print(label, "\t", round(precisionScore,3), "\t\t", round(recallScore,3), "\t\t", round(f1Score,3), "\t")
-
 
 	print()
 	#create confusion matrix
@@ -100,29 +97,6 @@ def customLemmatizer(arg):
 	st = PorterStemmer()
 	return st.stem(wnl.lemmatize(arg))
 
-class tweetFeatures(BaseEstimator, TransformerMixin):
-
-	def fit(self, X, y=None):
-		return self
-
-	def transform(self, X):
-		n = 0
-		if n == 0:
-			#nar of words
-			return [[len(X)]]
-		elif n == 1: 
-			#nr of unique words
-			return [len(set(X))]
-		elif n == 2:
-			#nr of chars
-			return [sum(len(token) for token in X)]
-		elif n == 3: 
-			#nr of unique chars
-			return [sum(len(token) for token in set(X))]
-		elif n == 4:
-			return [[len(x)] for x in X]
-
-
 def tweetIdentity(arg):
 	# tokenizer = TweetTokenizer(strip_handles=True, reduce_len=True)
 	# return tokenizer.tokenize(arg)
@@ -133,7 +107,16 @@ def tweetIdentity(arg):
 	
 def readFile(file):
 	return pickle.load(open(file, 'rb'))
-	
+
+class tweetLength(TransformerMixin):
+  def fit(self, X, y=None):
+	  return self
+
+  def transform(self, X):
+    newX = [len(x) for x in X]
+    return np.transpose(np.matrix(newX))
+
+
 def classify(train_tweets, train_categories):
 	#('preprocessor', CustomPreprocessor()),
 	# text_clf = Pipeline([#[('feats', FeatureUnion([
@@ -142,14 +125,26 @@ def classify(train_tweets, train_categories):
 	# 					 #])),
 	# 					 ('classifier', SGDClassifier(loss='hinge', penalty='l2', alpha=1e-3, random_state=42, max_iter=50, tol=None))])
 
-	# test by simon
-	text_clf = Pipeline([('feats', FeatureUnion([
-						 ('tweetfeats', tweetFeatures()),#, max_features=100000)),
-						 ('word', TfidfVectorizer(tokenizer=tweetIdentity, norm="l1", preprocessor=customLemmatizer, stop_words=sw.words('english'), lowercase=False, analyzer='word', ngram_range=(1,10), min_df=1)),#, max_features=100000)),
-						 ])),
-						 ('classifier', SGDClassifier(loss='hinge', penalty='l2', alpha=1e-3, random_state=42, max_iter=50, tol=None))])
-	
-
+	# test by remon
+	text_clf = Pipeline([
+    # Extract the subject & body
+    # Use FeatureUnion to combine the features
+    ('union', FeatureUnion(
+			transformer_list=[
+						# ('tweetLength', tweetLength()),
+            ('words', TfidfVectorizer(tokenizer=tweetIdentity,  norm="l1", preprocessor=customLemmatizer, stop_words=sw.words('english'), lowercase=False, analyzer='word', ngram_range=(1, 10), min_df=1)), #No preprocessor used
+            ('char', TfidfVectorizer(tokenizer=tweetIdentity, norm="l1", lowercase=False, analyzer='char', ngram_range=(3, 5), min_df=1)), #, max_features=100000)),   
+			],
+        # weight components in FeatureUnion
+        transformer_weights={
+					# 'tweetLength': 0.02,
+          'words': 1.0,
+          'char': 1.0
+        },
+    )),
+    # Use a SVC classifier on the combined features
+    ('classifier', SGDClassifier(loss='hinge', penalty='l2', alpha=1e-3, random_state=42, max_iter=50, tol=None))
+])
 	text_clf.fit(train_tweets, train_categories)  
 	return text_clf
 
