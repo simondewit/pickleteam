@@ -29,11 +29,12 @@ GLOVE_DIR = BASE_DIR + 'glove.twitter.27B/'
 EMBEDDING_DIM = 200
 batch_size = 128
 epochs = 10
+LANG = 'eng'
 
 def main():
 	#read documents
-	train_documents = readFile('eng-train.pickle')
-	test_documents = readFile('eng-trial.pickle')
+	train_documents = readFile(LANG + '-train.pickle')
+	test_documents = readFile(LANG + '-trial.pickle')
 
 	#create separate lists for tweets and the categories
 	train_tweets, train_categories = createLists(train_documents)
@@ -96,7 +97,7 @@ def main():
 	model.add(Dropout(0.2))
 	model.add(LSTM(EMBEDDING_DIM))
 	model.add(Dropout(0.2))
-	model.add(Dense(20, activation='sigmoid'))
+	model.add(Dense(labels.shape[1], activation='sigmoid'))
 
 	model.compile(loss='categorical_crossentropy',
 								optimizer='adam',
@@ -106,11 +107,14 @@ def main():
 	model.fit(train_tweets_trans, train_categories_trans,
 						batch_size=batch_size,
 						epochs=epochs,
-						validation_data=(test_tweets_trans, test_categories_trans))
+						validation_data=(test_tweets_trans, test_categories_trans), verbose = 2)
 
-	score = model.evaluate(test_tweets_trans, test_categories_trans, batch_size=batch_size)
+	score = model.evaluate(test_tweets_trans, test_categories_trans, batch_size=batch_size, verbose = 2)
 
 	predicted = model.predict(test_tweets_trans)
+	# Output predicted probabilities for use with ensemble methods
+	pickle.dump(predicted, open('predicted_probabilities_{0}_{1}_epochs.pickle'.format(LANG, epochs), 'wb'))
+	
 	my_labels = np.argmax(predicted, axis=1)
 	predicted_categories = [str(i) for i in list(my_labels)]
 
