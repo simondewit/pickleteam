@@ -68,8 +68,8 @@ ENG w/o excess padding, with zero masking, no Dropout before LSTM: 0.470 (10 epo
 Same, but with fixing of empty tokens, ..., and contractions in tokenization: 0.525 (10 epochs) <br />
 Same, but 20 epochs: 0.553 <br />
 Same, but with Dropout of 0.2 before LSTM as well: 0.529 <br />
-ES, w/o excess padding, with zero masking, no Dropout before LSTM, 10 epochs: <br />
-ES, w/o excess padding, with zero masking, no Dropout before LSTM, 20 epochs:
+ES, w/o excess padding, with zero masking, no Dropout before LSTM, 10 epochs: 0.728 <br />
+ES, w/o excess padding, with zero masking, no Dropout before LSTM, 20 epochs: 0.79
 
 ### SVM optimizations
 SVM with SnowballStemmer as preprocesser caused a small drop in accuracy, about 1/2 %. <br />
