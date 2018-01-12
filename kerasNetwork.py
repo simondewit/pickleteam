@@ -28,8 +28,8 @@ BASE_DIR = ''
 GLOVE_DIR = BASE_DIR + 'glove.twitter.27B/'
 EMBEDDING_DIM = 200
 batch_size = 128
-epochs = 10
-LANG = 'eng'
+epochs = 20
+LANG = 'es'
 
 def main():
 	#read documents
