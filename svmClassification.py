@@ -12,7 +12,6 @@ from sklearn.linear_model import SGDClassifier
 from sklearn.model_selection import train_test_split
 from nltk.tokenize import TweetTokenizer
 from sklearn import svm
-from sklearn.svm import SVC
 from sklearn.base import BaseEstimator, TransformerMixin
 
 from nltk.corpus import stopwords as sw
@@ -28,6 +27,7 @@ import nltk
 from nltk.stem import SnowballStemmer, PorterStemmer, LancasterStemmer
 from nltk.stem.lancaster import LancasterStemmer
 
+
 def main():
 	#read documents
 	train_documents = readFile('eng-train.pickle')
@@ -36,7 +36,9 @@ def main():
 	#create seperate lists for tweets and the categories
 	train_tweets, train_categories = createLists(train_documents)
 	test_tweets, test_categories = createLists(test_documents)
-
+	
+	#train the system
+	#text_clf = classify(train_tweets, train_categories)
 	results = classify(train_tweets, train_categories)
 	
 	#evaluate the system
@@ -65,11 +67,12 @@ def main():
 
 		print(label, "\t", round(precisionScore,3), "\t\t", round(recallScore,3), "\t\t", round(f1Score,3), "\t")
 
+
 	print()
 	#create confusion matrix
 	# mainCCM(test_categories,predicted_categories) #both variables must be lists
 
-	ourOutput = open('ourOutputEnglish.txt','wt')
+	ourOutput = open('english.output.txt','wt')
 	for i in predicted_categories:
 		ourOutput.write(i)
 		ourOutput.write("\n")
@@ -107,44 +110,16 @@ def tweetIdentity(arg):
 	
 def readFile(file):
 	return pickle.load(open(file, 'rb'))
-
-class tweetLength(TransformerMixin):
-  def fit(self, X, y=None):
-	  return self
-
-  def transform(self, X):
-    newX = [len(x) for x in X]
-    return np.transpose(np.matrix(newX))
-
-
+	
 def classify(train_tweets, train_categories):
 	#('preprocessor', CustomPreprocessor()),
-	# text_clf = Pipeline([#[('feats', FeatureUnion([
-	# 					 #('char', TfidfVectorizer(tokenizer=tweetIdentity, norm="l1", preprocessor=CustomPreprocessor, lowercase=False, analyzer='char', ngram_range=(3,5), min_df=1)),#, max_features=100000)),
-	# 					 ('word', TfidfVectorizer(tokenizer=tweetIdentity, norm="l1", preprocessor=customLemmatizer, stop_words=sw.words('english'), lowercase=False, analyzer='word', ngram_range=(1,10), min_df=1)),#, max_features=100000)),
-	# 					 #])),
-	# 					 ('classifier', SGDClassifier(loss='hinge', penalty='l2', alpha=1e-3, random_state=42, max_iter=50, tol=None))])
+	text_clf = Pipeline([#[('feats', FeatureUnion([
+						 #('char', TfidfVectorizer(tokenizer=tweetIdentity, norm="l1", preprocessor=CustomPreprocessor, lowercase=False, analyzer='char', ngram_range=(3,5), min_df=1)),#, max_features=100000)),
+						 ('word', TfidfVectorizer(tokenizer=tweetIdentity, norm="l1", preprocessor=customLemmatizer, stop_words=sw.words('english'), lowercase=False, analyzer='word', ngram_range=(1,10), min_df=1)),#, max_features=100000)),
+						 #])),
+						 ('classifier', SGDClassifier(loss='hinge', penalty='l2', alpha=1e-3, random_state=42, max_iter=50, tol=None))])
+	
 
-	# test by remon
-	text_clf = Pipeline([
-    # Extract the subject & body
-    # Use FeatureUnion to combine the features
-    ('union', FeatureUnion(
-			transformer_list=[
-						# ('tweetLength', tweetLength()),
-            ('words', TfidfVectorizer(tokenizer=tweetIdentity,  norm="l1", preprocessor=customLemmatizer, stop_words=sw.words('english'), lowercase=False, analyzer='word', ngram_range=(1, 10), min_df=1)), #No preprocessor used
-            ('char', TfidfVectorizer(tokenizer=tweetIdentity, norm="l1", lowercase=False, analyzer='char', ngram_range=(3, 5), min_df=1)), #, max_features=100000)),   
-			],
-        # weight components in FeatureUnion
-        transformer_weights={
-					# 'tweetLength': 0.02,
-          'words': 1.0,
-          'char': 1.0
-        },
-    )),
-    # Use a SVC classifier on the combined features
-    ('classifier', SGDClassifier(loss='hinge', penalty='l2', alpha=1e-3, random_state=42, max_iter=50, tol=None))
-])
 	text_clf.fit(train_tweets, train_categories)  
 	return text_clf
 
