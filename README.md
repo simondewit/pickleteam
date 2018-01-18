@@ -75,8 +75,9 @@ ES, w/o excess padding, with zero masking, no Dropout before LSTM, 20 epochs: 0.
 SVM with SnowballStemmer as preprocesser caused a small drop in accuracy, about 1/2 %. <br />
 (12/12/2017) SVM added strip_handles=True, reduce_len=True to TweetTokenizer() (tested without stopwords due to time): 0.532 ENG; 0.796 ES (with stopwords) <br/>
 (13/12/2017) Added POS-tags: ENG = 0.556, ES = 0.804 <br/>
-(13/12/2017) Changed N-gram range to (1,10): ENG = 0.583, ES = 0.821
-(18/01/2018) Removed all punctuation from data files, SVM (word N-gram (1, 15)) ENG = 0.613, ES = 0.83
+(13/12/2017) Changed N-gram range to (1,10): ENG = 0.583, ES = 0.821 <br/>
+
+(18/01/2018) Removed all punctuation from data files, SVM (word N-gram (1, 15)) ENG = 0.613, ES = 0.83<br/>
 ref: http://www.uni-weimar.de/medien/webis/events/pan-17/pan17-papers-final/pan17-author-profiling/martinc17-notebook.pdf
 
 worse: 
