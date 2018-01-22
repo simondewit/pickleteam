@@ -12,16 +12,19 @@ class data:
 
   X_train = []
   Y_train = []
+  X_dev = []
+  Y_dev = []
   X_test = []
-  Y_test = []
 
   def __init__(self, language):
     if language == ['english']:
       self.files = {'train': 'eng-train.pickle', 
-                    'test': 'eng-trial.pickle' }
+                    'development': 'eng-trial.pickle',
+                    'test': 'us_test.pickle' }
     elif language == ['spanish']:
       self.files = {'train': 'es-train.pickle', 
-                    'test': 'es-trial.pickle' }
+                    'development': 'es-trial.pickle',
+                    'test': 'es_test.pickle' }
 
     self.readFiles()
 
@@ -41,7 +44,19 @@ class data:
       self.X_train.append(X)
       self.Y_train.append(Y)
 
-    for Y, X in self.data_test:
+    for Y, X in self.data_dev:
+
+      X = re.sub(r'\…', ' $INSTAGRAM$', X)
+      X = re.sub(r'http:\/\/t.co\S*', ' %URL% ', X)
+      X = re.sub(r'https:\/\/t.co\S*', ' %URL% ', X)
+      
+      X = re.sub(r'[^a-zA-Z0-9 #$%&]', ' ', X)
+      X = re.sub(r'(.)\1{3,}', r'\1\1\1', X)
+
+      self.X_dev.append(X)
+      self.Y_dev.append(Y)
+
+    for X in self.data_test:
 
       X = re.sub(r'\…', ' $INSTAGRAM$', X)
       X = re.sub(r'http:\/\/t.co\S*', ' %URL% ', X)
@@ -51,18 +66,18 @@ class data:
       X = re.sub(r'(.)\1{3,}', r'\1\1\1', X)
 
       self.X_test.append(X)
-      self.Y_test.append(Y)
 
     self.X = copy.copy(self.X_train)
     self.Y = copy.copy(self.Y_train)
 
-    self.X.extend(self.X_test)
-    self.Y.extend(self.Y_test)
+    self.X.extend(self.X_dev)
+    self.Y.extend(self.Y_dev)
 
     self.split_amount = len(self.X_train)
 
   def readFiles(self):
     self.data_train = self.readFile('train')
+    self.data_dev = self.readFile('development')
     self.data_test = self.readFile('test')
 
     self.transform()

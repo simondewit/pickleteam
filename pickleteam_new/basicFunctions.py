@@ -159,7 +159,7 @@ class BasicFunctions:
     if not os.path.exists(str(str(cur_date) + '/' + str(cur_time))):
       os.makedirs(str(str(cur_date) + '/' + str(cur_time)))
 
-    output_test = open(str(cur_date) + '/' + str(cur_time) + '/' + language + '_gold.output.txt', 'w')
+    output_test = open(str(cur_date) + '/' + str(cur_time) + '/' + language + '_goldDEV.output.txt', 'w')
     for i in Y_test:
       output_test.write(i)
       output_test.write("\n")
