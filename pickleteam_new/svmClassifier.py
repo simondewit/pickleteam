@@ -57,11 +57,6 @@ class SVM:
     self.Y_predictedDEV = self.classifier.predict(self.X_dev)
     self.accuracy, self.precision, self.recall, self.f1score = BasicFunctions.getMetrics(self.Y_dev, self.Y_predictedDEV, self.labels)
 
-    # output_test = open(language + '_predictedGOED.output.txt', 'w')
-    # for i in self.Y_predictedTEST:
-    #   output_test.write(i)
-    #   output_test.write("\n")
-
   def printBasicEvaluation(self):    
     BasicFunctions.printEvaluation(self.accuracy, self.precision, self.recall, self.f1score, "Basic Evaluation")
 
