@@ -70,8 +70,8 @@ class data:
     self.X = copy.copy(self.X_train)
     self.Y = copy.copy(self.Y_train)
 
-    self.X.extend(self.X_dev)
-    self.Y.extend(self.Y_dev)
+    self.X.extend(self.X_test)
+    self.Y.extend(self.Y_test)
 
     self.split_amount = len(self.X_train)
 
