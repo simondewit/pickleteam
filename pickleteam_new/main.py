@@ -47,24 +47,24 @@ if len(labels) > 1: #otherwise, there is nothing to train
     data.X_train, data.Y_train = BasicFunctions.getUnskewedSubset(data.X_train, data.Y_train)
 
   if args.method == 'bayes':
-    classifier = Bayes(data.X_train, data.X_test, data.Y_train, data.Y_test, labels) 
+    classifier = Bayes(data.X_train, data.X_dev, data.X_test, data.Y_train, data.Y_dev, labels) 
   elif args.method == 'svm':
-    classifier = SVM(data.X_train, data.X_test, data.Y_train, data.Y_test, labels) 
+    classifier = SVM(data.X_train, data.X_dev, data.X_test, data.Y_train, data.Y_dev, labels) 
   elif args.method == 'knear':
-    classifier = KNeighbors(data.X_train, data.X_test, data.Y_train, data.Y_test, labels)
+    classifier = KNeighbors(data.X_train, data.X_dev, data.X_test, data.Y_train, data.Y_dev, labels)
   elif args.method == 'tree':
-    classifier = DecisionTree(data.X_train, data.X_test, data.Y_train, data.Y_test, labels)
+    classifier = DecisionTree(data.X_train, data.X_dev, data.X_test, data.Y_train, data.Y_dev, labels)
   elif args.method == 'neural':
     from neuralNetworkClassifier import NeuralNetwork #to avoid keras/tensorflow loading with other methods
     classifier = NeuralNetwork(data.X, data.Y, labels, args.avoid_skewness, data.split_amount)
   elif args.method == 'baseline':
-    classifier = Baseline(data.X_train, data.X_test, data.Y_train, data.Y_test, labels)
+    classifier = Baseline(data.X_train, data.X_dev, data.X_test, data.Y_train, data.Y_dev, labels)
 
   classifier.classify()
   classifier.evaluate()
   classifier.printBasicEvaluation()
   classifier.printClassEvaluation()
-  BasicFunctions.writeResults(predict_languages, classifier.Y_test, classifier.Y_predicted)
+  BasicFunctions.writeResults(predict_languages, classifier.Y_dev, classifier.Y_predictedTEST)
   #BasicFunctions.writeConfusionMatrix(classifier.Y_test, classifier.Y_predicted)
 
   end_time = datetime.datetime.now()
