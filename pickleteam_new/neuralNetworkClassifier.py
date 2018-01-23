@@ -95,7 +95,7 @@ class NeuralNetwork:
                   metrics=['accuracy']) 
 	
     # Train the model 
-    self.model.fit(self.X_train, self.Y_train, epochs = 1, batch_size = 128, validation_split = 0.2)
+    self.model.fit(self.X_train, self.Y_train, epochs = 20, batch_size = 128, validation_split = 0.2)
 
   def evaluate(self):
     self.Y_predictedDev = self.model.predict(self.X_dev)
