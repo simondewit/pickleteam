@@ -21,7 +21,10 @@ from customTokenizer import CustomTokenizer
 
 
 class NeuralNetwork:
-  word_embeddings_dir = 'glove.twitter.27B/'
+  #Ik had dit zo nodig om glove te kunnen laten runnen, kan misschien voor anderen wel weg!
+  BASE_DIR = ''
+  word_embeddings_dir = BASE_DIR + 'glove.twitter.27B/'
+  
   word_embeddings_dim = 200
 
   labels = []
@@ -32,19 +35,21 @@ class NeuralNetwork:
   
   Y = []
 
-  def __init__(self, X, Y, labels, avoid_skewness, split_amount):
+  def __init__(self, X, Y, labels, avoid_skewness, split_amountTrain, split_amountTest):
     self.X = X
 
     self.avoid_skewness = avoid_skewness
-    self.split_amount = split_amount
+    self.split_amountTrain = split_amountTrain
+    self.split_amountTest = split_amountTest
 
     self.labels = labels
     for i, label in enumerate(self.labels):
       self.labels_dict[label] = i
       self.labels_dict_rev[i] = label
 
-    for label in Y:
+    for label in Y[:self.split_amountTest]:
       self.Y.append(self.labels_dict[label])
+      # print(len(self.Y))
 
   def tokenize(self):
     self.X_tokenized = CustomTokenizer.tokenizeTweets(self.X) #all tweets!
@@ -52,15 +57,19 @@ class NeuralNetwork:
     self.tokenizer.fit_on_texts(self.X_tokenized)
     self.sequences = self.tokenizer.texts_to_sequences(self.X_tokenized)
     self.X = pad_sequences(self.sequences)
-    self.Y = to_categorical(self.Y)
+    self.Y = to_categorical(self.Y[:self.split_amountTest])
 
   def classify(self):
     self.tokenize()
 
-    self.X_train = self.X[:self.split_amount]
-    self.Y_train = self.Y[:self.split_amount]
-    self.X_test = self.X[self.split_amount:]
-    self.Y_test = self.Y[self.split_amount:]
+    self.X_train = self.X[:self.split_amountTrain]
+    self.Y_train = self.Y[:self.split_amountTrain]
+
+    self.X_dev = self.X[self.split_amountTrain:self.split_amountTest]
+    self.Y_dev = self.Y[self.split_amountTrain:self.split_amountTest]
+    
+    self.X_test = self.X[self.split_amountTest:]
+
 
     if self.avoid_skewness:
       Y_train = np.argmax(self.Y_train, axis=1)
@@ -86,23 +95,28 @@ class NeuralNetwork:
                   metrics=['accuracy']) 
 	
     # Train the model 
-    self.model.fit(self.X_train, self.Y_train, epochs = 20, batch_size = 128, validation_split = 0.2)
+    self.model.fit(self.X_train, self.Y_train, epochs = 1, batch_size = 128, validation_split = 0.2)
 
   def evaluate(self):
-    self.Y_predicted = self.model.predict(self.X_test)
-    self.Y_predicted = np.argmax(self.Y_predicted, axis=1)
-    self.Y_predicted = [self.labels_dict_rev[int(i)] for i in list(self.Y_predicted)]
+    self.Y_predictedDev = self.model.predict(self.X_dev)
+    self.Y_predictedDev = np.argmax(self.Y_predictedDev, axis=1)
+    self.Y_predictedDev = [self.labels_dict_rev[int(i)] for i in list(self.Y_predictedDev)]
     
-    self.Y_test = np.argmax(self.Y_test, axis=1)
-    self.Y_test = [self.labels_dict_rev[int(i)] for i in list(self.Y_test)]
+    self.Y_dev = np.argmax(self.Y_dev, axis=1)
+    self.Y_dev = [self.labels_dict_rev[int(i)] for i in list(self.Y_dev)]
 
-    self.accuracy, self.precision, self.recall, self.f1score = BasicFunctions.getMetrics(self.Y_test, self.Y_predicted, self.labels)
+    self.accuracy, self.precision, self.recall, self.f1score = BasicFunctions.getMetrics(self.Y_dev, self.Y_predictedDev, self.labels)
+
+
+    self.Y_predictedTEST = self.model.predict(self.X_test)
+    self.Y_predictedTEST = np.argmax(self.Y_predictedTEST, axis=1)
+    self.Y_predictedTEST = [self.labels_dict_rev[int(i)] for i in list(self.Y_predictedTEST)]
 
   def printBasicEvaluation(self):    
     BasicFunctions.printEvaluation(self.accuracy, self.precision, self.recall, self.f1score, "Basic Evaluation")
 
   def printClassEvaluation(self):
-    BasicFunctions.printClassEvaluation(self.Y_test, self.Y_predicted, self.labels)
+    BasicFunctions.printClassEvaluation(self.Y_dev, self.Y_predictedDev, self.labels)
 
   def printDataInformation(self):
 

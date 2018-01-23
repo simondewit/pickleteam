@@ -56,7 +56,7 @@ if len(labels) > 1: #otherwise, there is nothing to train
     classifier = DecisionTree(data.X_train, data.X_dev, data.X_test, data.Y_train, data.Y_dev, labels)
   elif args.method == 'neural':
     from neuralNetworkClassifier import NeuralNetwork #to avoid keras/tensorflow loading with other methods
-    classifier = NeuralNetwork(data.X, data.Y, labels, args.avoid_skewness, data.split_amount)
+    classifier = NeuralNetwork(data.X, data.Y, labels, args.avoid_skewness, data.split_amountTrain, data.split_amountTest)
   elif args.method == 'baseline':
     classifier = Baseline(data.X_train, data.X_dev, data.X_test, data.Y_train, data.Y_dev, labels)
 
