@@ -69,19 +69,14 @@ class data:
 
     self.X = copy.copy(self.X_train)
     self.Y = copy.copy(self.Y_train)
-    print(len(self.X))
+
     self.X.extend(self.X_dev)
     self.Y.extend(self.Y_dev)
-    print(len(self.X))
 
     self.X.extend(self.X_test)
-    print(len(self.X))
-    # self.Y.extend(self.Y_test)
 
     self.split_amountTrain = len(self.X_train)
-    print(self.split_amountTrain)
     self.split_amountTest = len(self.X_train) + len(self.X_dev)
-    print(self.split_amountTest)
 
   def readFiles(self):
     self.data_train = self.readFile('train')

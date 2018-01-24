@@ -33,7 +33,7 @@ class BasicFunctions:
     elif len(languages) == 1:
       printLan = '\t\t\t\t\t'
 
-    if method == 'neural' or method == 'baseline':
+    if method == 'neural' or method == 'baseline' or method == 'ensemble':
       printMethod = '\t\t\t\t'
     else:
       printMethod = '\t\t\t\t\t'

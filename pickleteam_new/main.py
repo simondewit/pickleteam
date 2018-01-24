@@ -1,6 +1,7 @@
 
 import argparse
 import random
+import pickle
 
 import datetime
 
@@ -13,6 +14,7 @@ from bayesClassifier import Bayes
 from kNeighborsClassifier import KNeighbors
 from decisionTreeClassifier import DecisionTree
 from baselineClassifier import Baseline
+from ensembleClassifier import Ensemble
 
 from data import data
 
@@ -57,6 +59,9 @@ if len(labels) > 1: #otherwise, there is nothing to train
   elif args.method == 'neural':
     from neuralNetworkClassifier import NeuralNetwork #to avoid keras/tensorflow loading with other methods
     classifier = NeuralNetwork(data.X, data.Y, labels, args.avoid_skewness, data.split_amountTrain, data.split_amountTest)
+  elif args.method == 'ensemble':
+    probabilitiesNN = pickle.load(open("predicted_probabilities_eng_20_epochs.pickle", "rb" ))
+    classifier = Ensemble(data.X_train, data.X_dev, data.X_test, data.Y_train, data.Y_dev, labels, probabilitiesNN)
   elif args.method == 'baseline':
     classifier = Baseline(data.X_train, data.X_dev, data.X_test, data.Y_train, data.Y_dev, labels)
 
