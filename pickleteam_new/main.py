@@ -60,8 +60,9 @@ if len(labels) > 1: #otherwise, there is nothing to train
     from neuralNetworkClassifier import NeuralNetwork #to avoid keras/tensorflow loading with other methods
     classifier = NeuralNetwork(data.X, data.Y, labels, args.avoid_skewness, data.split_amountTrain, data.split_amountTest)
   elif args.method == 'ensemble':
-    probabilitiesNN = pickle.load(open("predicted_probabilities_eng_20_epochs.pickle", "rb" ))
-    classifier = Ensemble(data.X_train, data.X_dev, data.X_test, data.Y_train, data.Y_dev, labels, probabilitiesNN)
+    probabilitiesNNDEV = pickle.load(open("predicted_probabilities_es_20_epochs.pickle", "rb" ))
+    probabilitiesNNTEST = pickle.load(open("spanish_predicted_probabilities.pickle", "rb" ))
+    classifier = Ensemble(data.X_train, data.X_dev, data.X_test, data.Y_train, data.Y_dev, labels, probabilitiesNNDEV, probabilitiesNNTEST)
   elif args.method == 'baseline':
     classifier = Baseline(data.X_train, data.X_dev, data.X_test, data.Y_train, data.Y_dev, labels)
 
@@ -70,7 +71,7 @@ if len(labels) > 1: #otherwise, there is nothing to train
   classifier.printBasicEvaluation()
   classifier.printClassEvaluation()
   BasicFunctions.writeResults(predict_languages, classifier.Y_dev, classifier.Y_predictedTEST)
-  #BasicFunctions.writeConfusionMatrix(classifier.Y_test, classifier.Y_predicted)
+  # BasicFunctions.writeConfusionMatrix(classifier.Y_dev, classifier.Y_predictedDEV)
 
   end_time = datetime.datetime.now()
   BasicFunctions.printDuration(start_time, end_time)

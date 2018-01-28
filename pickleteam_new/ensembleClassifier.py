@@ -21,7 +21,7 @@ class Ensemble:
   Y_predicted = []
   labels = []
 
-  def __init__(self, X_train, X_dev, X_test, Y_train, Y_dev, labels, probabilitiesNN):
+  def __init__(self, X_train, X_dev, X_test, Y_train, Y_dev, labels, probabilitiesNNDEV, probabilitiesNNTEST):
     self.X_train = X_train
     self.X_dev = X_dev
     self.X_test = X_test
@@ -33,7 +33,8 @@ class Ensemble:
 
     self.labels = labels
 
-    self.probabilitiesNN = probabilitiesNN
+    self.probabilitiesNNDEV = probabilitiesNNDEV
+    self.probabilitiesNNTEST = probabilitiesNNTEST
 
   def classify(self):
 
@@ -65,21 +66,24 @@ class Ensemble:
     self.Y_predictedTEST = self.classifier.predict(self.X_test)
     print("TEST: ", self.Y_predictedTEST[:10])
 
-    # for idx, i in np.ndenumerate(self.Y_predictedTEST):
-    #   idx = idx[0]
-    #   if max(self.probabilitiesNNTEST[idx]) > 0.9:  
-    #     # print(i, self.Y_predictedTEST[idx], np.argmax(self.probabilitiesNNTEST[idx]))
-    #     self.Y_predictedTEST[idx] = np.argmax(self.probabilitiesNNTEST[idx])
+    for idx, i in np.ndenumerate(self.Y_predictedTEST):
+      idx = idx[0]
+      if max(self.probabilitiesNNTEST[idx]) > 0.95:  
+        if max(self.probabilitiesNNTEST[idx]) != self.Y_predictedTEST[idx]:
+          # print(i, self.Y_predictedTEST[idx], np.argmax(self.probabilitiesNNTEST[idx]))
+          self.Y_predictedTEST[idx] = np.argmax(self.probabilitiesNNTEST[idx])
 
     print("TEST: ", self.Y_predictedTEST[:10])
+
 
     
     self.Y_predictedDEV = self.classifier.predict(self.X_dev)
 
     for idx, i in np.ndenumerate(self.Y_predictedDEV):
       idx = idx[0]
-      if max(self.probabilitiesNN[idx]) > 0.95: 
-        self.Y_predictedDEV[idx] = np.argmax(self.probabilitiesNN[idx])
+      if max(self.probabilitiesNNDEV[idx]) > 0.95: 
+        if max(self.probabilitiesNNDEV[idx]) != self.Y_predictedDEV[idx]:
+          self.Y_predictedDEV[idx] = np.argmax(self.probabilitiesNNDEV[idx])
 
     self.accuracy, self.precision, self.recall, self.f1score = BasicFunctions.getMetrics(self.Y_dev, self.Y_predictedDEV, self.labels)
 
